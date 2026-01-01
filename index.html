@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Mulai Stock Opname</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Stock Opname</h2>
+
+<input id="petugas" placeholder="Nama Petugas" autofocus>
+<br><br>
+
+<button onclick="mulai('scanner')">🔌 Scanner External</button>
+<button onclick="mulai('kamera')">📷 Kamera</button>
+
+<script>
+function mulai(mode){
+  const p = document.getElementById("petugas").value.trim();
+  if(!p){ alert("Nama petugas wajib diisi"); return; }
+
+  localStorage.setItem("petugas", p);
+  localStorage.setItem("modeScan", mode);
+  location.href = "scan.html";
+}
+</script>
+
+</body>
+</html>
