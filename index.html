@@ -18,17 +18,18 @@
 
   <div class="app">
 
-    <h2>Stock Opname Surtok</h2>
+    <!-- Judul di tengah -->
+    <h2 class="title">Stock Opname</h2>
 
-    <input id="petugas" placeholder="Nama Petugas (contoh : Awilistrators)" autofocus>
+    <input id="petugas" placeholder="Nama Petugas" autofocus>
 
-    <button onclick="mulai('scanner')">🔌 Scanner External</button>
-    <button onclick="mulai('kamera')" class="secondary">📷 Kamera</button>
+    <!-- Tombol tunggal -->
+    <button onclick="mulai()">Mulai SO</button>
 
   </div>
 
   <script>
-    function mulai(mode){
+    function mulai(){
       const p = document.getElementById("petugas").value.trim();
       if(!p){
         alert("Nama petugas wajib diisi");
@@ -36,7 +37,6 @@
       }
 
       localStorage.setItem("petugas", p);
-      localStorage.setItem("modeScan", mode);
       location.href = "scan.html";
     }
   </script>
