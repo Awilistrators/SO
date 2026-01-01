@@ -95,13 +95,14 @@ function cariProduk(){
 
   if(masterProduk[code]){
     nama.innerText = masterProduk[code];
-    status.innerText = "";
-    qty.focus();
+    status.innerText = "✔ Produk ditemukan";
+    // ⛔ tidak auto pindah ke qty
   } else {
     nama.innerText = "";
     status.innerText = "⚠️ Produk tidak ditemukan";
   }
 }
+
 
 /* ============================= */
 /* SIMPAN OPNAME                 */
