@@ -1,17 +1,92 @@
-body{
-  font-family: Arial, sans-serif;
-  padding: 20px;
+/* ============================= */
+/* RESET & FULLSCREEN            */
+/* ============================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-input, button{
-  padding: 12px;
-  font-size: 16px;
-  margin: 6px 0;
+html, body {
   width: 100%;
-  max-width: 320px;
+  height: 100%;
+  overflow-x: hidden;   /* ⬅️ PENTING: anti scroll samping */
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
 }
 
-#nama{
+/* ============================= */
+/* CONTAINER APP                 */
+/* ============================= */
+.app {
+  min-height: 100vh;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================= */
+/* INFO PETUGAS                  */
+/* ============================= */
+#info {
+  font-size: 14px;
+  color: #555;
+}
+
+/* ============================= */
+/* INPUT                         */
+/* ============================= */
+input {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* ============================= */
+/* NAMA PRODUK                   */
+/* ============================= */
+#nama {
+  font-size: 20px;
   font-weight: bold;
-  margin: 8px 0;
+  color: #222;
+  min-height: 28px;
+}
+
+/* ============================= */
+/* STATUS                        */
+/* ============================= */
+#status {
+  font-size: 14px;
+  color: #888;
+  min-height: 20px;
+}
+
+/* ============================= */
+/* BUTTON                        */
+/* ============================= */
+button {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  background: #2f80ed;
+  color: #fff;
+}
+
+button.secondary {
+  background: #e0e0e0;
+  color: #333;
+}
+
+/* ============================= */
+/* KHUSUS HP                     */
+/* ============================= */
+@media (max-width: 480px) {
+  button {
+    font-size: 20px;
+  }
 }
