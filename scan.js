@@ -1,6 +1,7 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxWygSWb3Xdafmp3L_1_b3BBx-2Vqnp3-pS5NT4JJPO2k0XJmMflIrrOFKQJU00Bvrp/exec";
 
-let masterProduk = {};   // ⬅️ cache MASTER_PRODUK
+let masterProduk = {};   // cache MASTER_PRODUK
+
 const petugas = localStorage.getItem("petugas");
 const mode = localStorage.getItem("modeScan");
 
@@ -8,15 +9,21 @@ if(!petugas){
   location.href = "index.html";
 }
 
-document.getElementById("info").innerText =
-  "Petugas: " + petugas + " | Mode: " + mode;
-
-loadMasterProduk(); // ⬅️ PENTING: load master sekali
-
+/* ============================= */
+/* ELEMENT DOM (WAJIB DULU)      */
+/* ============================= */
 const barcode = document.getElementById("barcode");
 const qty = document.getElementById("qty");
 const nama = document.getElementById("nama");
 const status = document.getElementById("status");
+const info = document.getElementById("info");
+
+info.innerText = "Petugas: " + petugas + " | Mode: " + mode;
+
+/* ============================= */
+/* LOAD MASTER PRODUK (SEKALI)   */
+/* ============================= */
+loadMasterProduk();
 
 function loadMasterProduk(){
   status.innerText = "📦 Memuat data produk...";
@@ -29,7 +36,7 @@ function loadMasterProduk(){
   })
   .then(r => r.json())
   .then(data => {
-    masterProduk = data; // simpan ke memory
+    masterProduk = data;
     status.innerText = "✅ Data produk siap";
     setTimeout(() => status.innerText = "", 1000);
   })
@@ -38,7 +45,9 @@ function loadMasterProduk(){
   });
 }
 
-// SCAN DENGAN SCANNER USB (ENTER)
+/* ============================= */
+/* SCAN BARCODE                  */
+/* ============================= */
 barcode.addEventListener("keydown", e => {
   if(e.key === "Enter"){
     e.preventDefault();
@@ -61,8 +70,14 @@ function cariProduk(){
   }
 }
 
+/* ============================= */
+/* SIMPAN OPNAME                 */
+/* ============================= */
 function simpan(){
-  if(!qty.value){ alert("Qty wajib diisi"); return; }
+  if(!qty.value){ 
+    alert("Qty wajib diisi"); 
+    return; 
+  }
 
   fetch(API_URL,{
     method:"POST",
@@ -83,6 +98,9 @@ function simpan(){
   });
 }
 
+/* ============================= */
+/* GANTI PETUGAS                 */
+/* ============================= */
 function ganti(){
   localStorage.clear();
   location.href = "index.html";
