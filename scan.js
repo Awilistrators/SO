@@ -1,6 +1,7 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxWygSWb3Xdafmp3L_1_b3BBx-2Vqnp3-pS5NT4JJPO2k0XJmMflIrrOFKQJU00Bvrp/exec";
 
-let masterProduk = {};   // cache MASTER_PRODUK
+let masterProduk = {};
+let masterReady = false; // ⬅️ TAMBAH
 
 const petugas = localStorage.getItem("petugas");
 const mode = localStorage.getItem("modeScan");
@@ -36,10 +37,12 @@ function loadMasterProduk(){
   })
   .then(r => r.json())
   .then(data => {
-    masterProduk = data;
-    status.innerText = "✅ Data produk siap";
-    setTimeout(() => status.innerText = "", 1000);
-  })
+  masterProduk = data;
+  masterReady = true; // ⬅️ PENTING
+  status.innerText = "✅ Data produk siap";
+  setTimeout(() => status.innerText = "", 1000);
+})
+
   .catch(() => {
     status.innerText = "❌ Gagal memuat master produk";
   });
@@ -50,25 +53,44 @@ function loadMasterProduk(){
 /* ============================= */
 let scanTimer = null;
 
+// ENTER (scanner / keyboard)
 barcode.addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === "Tab") {
+  if (e.key === "Enter") {
     e.preventDefault();
     cariProduk();
   }
+
+  // TAB → tunggu browser selesai update value
+  if (e.key === "Tab") {
+    setTimeout(() => {
+      cariProduk();
+    }, 0);
+  }
 });
 
-// Untuk HP & input manual
+// HP & paste / kamera
 barcode.addEventListener("input", () => {
   clearTimeout(scanTimer);
   scanTimer = setTimeout(() => {
     cariProduk();
-  }, 300); // tunggu user selesai input
+  }, 300);
 });
 
+// SCANNER TAB (kehilangan fokus)
+barcode.addEventListener("blur", () => {
+  setTimeout(() => {
+    cariProduk();
+  }, 0);
+});
 
 function cariProduk(){
   const code = barcode.value.trim();
   if(!code) return;
+
+  if(!masterReady){
+    status.innerText = "⏳ Data produk belum siap...";
+    return;
+  }
 
   if(masterProduk[code]){
     nama.innerText = masterProduk[code];
@@ -77,7 +99,6 @@ function cariProduk(){
   } else {
     nama.innerText = "";
     status.innerText = "⚠️ Produk tidak ditemukan";
-    barcode.focus();
   }
 }
 
