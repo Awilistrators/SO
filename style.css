@@ -90,3 +90,11 @@ button.secondary {
     font-size: 20px;
   }
 }
+
+/* Judul halaman index */
+.title {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 24px;
+}
+
