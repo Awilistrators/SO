@@ -144,3 +144,10 @@ button.secondary {
   background: #2f80ed;
   color: white;
 }
+
+#qoh {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
+}
