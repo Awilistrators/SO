@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxWygSWb3Xdafmp3L_1_b3BBx-2Vqnp3-pS5NT4JJPO2k0XJmMflIrrOFKQJU00Bvrp/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxcYu3mJ7ezxrZmzuAQcIEjflqXLGLZBDuH0Y2ifJ29rjp6zkpEAO1gZ84XPGPzhOHE/exec";
 
 let masterProduk = {};
 let masterReady = false; // ⬅️ TAMBAH
@@ -19,6 +19,7 @@ const qty = document.getElementById("qty");
 const nama = document.getElementById("nama");
 const status = document.getElementById("status");
 const info = document.getElementById("info");
+const qohEl = document.getElementById("qoh");
 
 info.innerText = "Petugas: " + petugas;
 
@@ -93,12 +94,16 @@ function cariProduk(){
     return;
   }
 
-  if(masterProduk[code]){
-    nama.innerText = masterProduk[code];
+  const produk = masterProduk[code];
+
+  if(produk){
+    nama.innerText = produk.nama;
+    qohEl.innerText = "Stok tersedia: " + produk.qoh;
     status.innerText = "✔ Produk ditemukan";
     // ⛔ tidak auto pindah ke qty
   } else {
     nama.innerText = "";
+    qohEl.innerText = "";
     status.innerText = "⚠️ Produk tidak ditemukan";
   }
 }
@@ -108,29 +113,32 @@ function cariProduk(){
 /* SIMPAN OPNAME                 */
 /* ============================= */
 function simpan(){
-  if(!qty.value){ 
-    alert("Qty wajib diisi"); 
-    return; 
+  if(!qty.value){
+    tampilkanPopup("Qty wajib diisi");
+    return;
   }
 
   fetch(API_URL,{
     method:"POST",
     body: JSON.stringify({
-      action:"simpanOpname",
-      barcode: barcode.value,
+      action: "simpanOpname",
+      kode_input: barcode.value,   // bisa kode item / barcode
       nama: nama.innerText,
       qty: qty.value,
       petugas: petugas
     })
   })
-  .then(r=>r.json())
-  .then(()=>{
-    barcode.value="";
-    qty.value="";
-    nama.innerText="";
+  .then(r => r.json())
+  .then(() => {
+    barcode.value = "";
+    qty.value = "";
+    nama.innerText = "";
+    qohEl.innerText = "";
+    status.innerText = "";
     barcode.focus();
   });
 }
+
 
 /* ============================= */
 /* GANTI PETUGAS                 */
