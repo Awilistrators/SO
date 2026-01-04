@@ -166,9 +166,9 @@ function ganti(){
 }
 
 function bukaKamera(){
-  const kameraDiv = document.getElementById("kamera");
+  const popup = document.getElementById("kamera-popup");
+popup.classList.remove("hidden");
 
-  kameraDiv.style.display = "block";
 
   if(qrScanner) return;
 
@@ -196,6 +196,19 @@ function bukaKamera(){
     },
     () => {}
   );
+}
+
+function tutupPopupKamera(){
+  const popup = document.getElementById("kamera-popup");
+
+  if(qrScanner){
+    qrScanner.stop().then(() => {
+      qrScanner = null;
+      popup.classList.add("hidden");
+    });
+  } else {
+    popup.classList.add("hidden");
+  }
 }
 
 
