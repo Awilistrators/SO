@@ -154,7 +154,7 @@ function simpan(){
   qohEl.innerText = "";
   status.innerText = "💾 Tersimpan";
   resumeKamera();
-  scrollKeKamera();
+  scrollKeAtas();
 
 
   setTimeout(() => {
@@ -297,14 +297,14 @@ function resumeKamera(){
   lastScanTime = 0;
 }
 
-function scrollKeKamera(){
-  const kameraDiv = document.getElementById("kamera");
-  if(kameraDiv){
-    kameraDiv.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
+function scrollKeAtas(){
+  setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
     });
-  }
+  }, 150);
 }
 
 
