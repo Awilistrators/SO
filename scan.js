@@ -3,6 +3,10 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyBo6zgFV0ULvGk--Ornhf_
 let masterProduk = {};
 let masterReady = false; // ⬅️ TAMBAH
 let qrScanner = null;
+let kameraAktif = false;
+let lastScan = "";
+let lastScanTime = 0;
+
 
 const petugas = localStorage.getItem("petugas");
 const mode = localStorage.getItem("modeScan");
@@ -175,11 +179,11 @@ function ganti(){
 
 function bukaKamera(){
   const kameraDiv = document.getElementById("kamera");
-
   kameraDiv.style.display = "block";
 
   if(qrScanner) return;
 
+  kameraAktif = true;
   qrScanner = new Html5Qrcode("kamera");
 
   qrScanner.start(
@@ -195,16 +199,37 @@ function bukaKamera(){
       ]
     },
     (decodedText) => {
+      if(!kameraAktif) return;
+
+      const now = Date.now();
+if(decodedText === lastScan && now - lastScanTime < 1500) return;
+
+lastScan = decodedText;
+lastScanTime = now;
+
       barcode.value = decodedText;
       bunyiBeep();
-      qrScanner.stop();
-      qrScanner = null;
-      kameraDiv.style.display = "none";
-      cariProduk();
+      cariProduk(); // fokus otomatis ke QTY
+
+      // ❌ JANGAN stop kamera
     },
     () => {}
   );
 }
+
+function matikanKamera(){
+  const kameraDiv = document.getElementById("kamera");
+
+  kameraAktif = false;
+
+  if(qrScanner){
+    qrScanner.stop().then(() => {
+      qrScanner = null;
+      kameraDiv.style.display = "none";
+    });
+  }
+}
+
 
 
 function bunyiBeep(){
