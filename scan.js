@@ -166,9 +166,8 @@ function ganti(){
 }
 
 function bukaKamera(){
-  const popup = document.getElementById("kamera-popup");
-popup.classList.remove("hidden");
-
+  const kameraDiv = document.getElementById("kamera");
+  kameraDiv.style.display = "block";
 
   if(qrScanner) return;
 
@@ -197,20 +196,6 @@ popup.classList.remove("hidden");
     () => {}
   );
 }
-
-function tutupPopupKamera(){
-  const popup = document.getElementById("kamera-popup");
-
-  if(qrScanner){
-    qrScanner.stop().then(() => {
-      qrScanner = null;
-      popup.classList.add("hidden");
-    });
-  } else {
-    popup.classList.add("hidden");
-  }
-}
-
 
 function bunyiBeep(){
   try {
