@@ -101,7 +101,15 @@ function cariProduk(){
   qohEl.innerText = "Stok sistem : " + produk.qoh;
   status.innerText = "✔ Produk ditemukan";
   bunyiBeep(); // 🔊 beep sukses
+
+  // ⬇️ TAMBAHKAN INI
+  qty.value = "";
+  setTimeout(() => {
+    qty.focus();
+  }, 100);
+
 } else {
+
     nama.innerText = "";
     qohEl.innerText = "";
     status.innerText = "⚠️ Produk tidak ditemukan";
@@ -247,3 +255,4 @@ function tutupPopup(){
     popup.classList.add("hidden");
   }
 }
+
