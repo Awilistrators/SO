@@ -202,23 +202,31 @@ function bukaKamera(){
 function bunyiBeep(){
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
+
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    osc.type = "sine";        // suara halus
-    osc.frequency.value = 880; // nada beep (Hz)
+    osc1.type = "square";
+    osc2.type = "triangle";
 
-    osc.connect(gain);
+    osc1.frequency.value = 600;
+    osc2.frequency.value = 1200;
+
+    osc1.connect(gain);
+    osc2.connect(gain);
     gain.connect(ctx.destination);
 
-    gain.gain.value = 0.15;   // volume (0.1–0.2 ideal)
+    gain.gain.value = 0.18;
 
-    osc.start();
-    osc.stop(ctx.currentTime + 0.12); // durasi beep (detik)
-  } catch(e) {
-    console.log("Audio tidak diizinkan");
-  }
+    osc1.start();
+    osc2.start();
+
+    osc1.stop(ctx.currentTime + 0.08);
+    osc2.stop(ctx.currentTime + 0.15);
+  } catch(e) {}
 }
+
 
 function tampilkanPopup(teks){
   const popup = document.getElementById("popup");
