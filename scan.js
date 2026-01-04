@@ -154,6 +154,8 @@ function simpan(){
   qohEl.innerText = "";
   status.innerText = "💾 Tersimpan";
   barcode.focus();
+  resumeKamera();
+
 
   setTimeout(() => {
     status.innerText = "";
@@ -208,8 +210,12 @@ lastScan = decodedText;
 lastScanTime = now;
 
       barcode.value = decodedText;
-      bunyiBeep();
-      cariProduk(); // fokus otomatis ke QTY
+bunyiBeep();
+cariProduk();
+
+// ⬇️ PAUSE kamera setelah scan sukses
+pauseKamera();
+
 
       // ❌ JANGAN stop kamera
     },
@@ -280,4 +286,15 @@ function tutupPopup(){
     popup.classList.add("hidden");
   }
 }
+
+function pauseKamera(){
+  kameraAktif = false;
+}
+
+function resumeKamera(){
+  kameraAktif = true;
+  lastScan = "";        // ⬅️ RESET BARCODE TERAKHIR
+  lastScanTime = 0;
+}
+
 
