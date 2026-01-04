@@ -175,19 +175,28 @@ function bukaKamera(){
   qrScanner = new Html5Qrcode("kamera");
 
   qrScanner.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    (decodedText) => {
-      barcode.value = decodedText;
-      qrScanner.stop();
-      qrScanner = null;
-      kameraDiv.style.display = "none";
-      cariProduk();
-    },
-    () => {}
-  ).catch(err => {
-    status.innerText = "❌ Kamera tidak bisa diakses";
-  });
+  { facingMode: "environment" },
+  {
+    fps: 10,
+    qrbox: { width: 300, height: 120 }, // ⬅️ bentuk horizontal (khusus 1D)
+    formatsToSupport: [
+      Html5QrcodeSupportedFormats.CODE_128,
+      Html5QrcodeSupportedFormats.EAN_13,
+      Html5QrcodeSupportedFormats.EAN_8,
+      Html5QrcodeSupportedFormats.UPC_A,
+      Html5QrcodeSupportedFormats.UPC_E
+    ]
+  },
+  (decodedText) => {
+    barcode.value = decodedText;
+    qrScanner.stop();
+    qrScanner = null;
+    kameraDiv.style.display = "none";
+    cariProduk();
+  },
+  () => {}
+);
+
 }
 
 qty.focus();
