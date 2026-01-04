@@ -153,7 +153,6 @@ function simpan(){
   nama.innerText = "";
   qohEl.innerText = "";
   status.innerText = "💾 Tersimpan";
-  barcode.focus();
   resumeKamera();
 
 
