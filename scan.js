@@ -118,27 +118,35 @@ function simpan(){
     return;
   }
 
+  // SIMPAN DATA KE VARIABEL DULU
+  const payload = {
+    action: "simpanOpname",
+    kode_input: barcode.value,   // kode item / barcode
+    nama: nama.innerText,
+    qty: qty.value,
+    petugas: petugas
+  };
+
+  // RESET UI LANGSUNG (BIAR INSTAN)
+  barcode.value = "";
+  qty.value = "";
+  nama.innerText = "";
+  qohEl.innerText = "";
+  status.innerText = "💾 Tersimpan";
+  barcode.focus();
+
+  setTimeout(() => {
+    status.innerText = "";
+  }, 500);
+
+  // KIRIM API DI BACKGROUND
   fetch(API_URL,{
     method:"POST",
-    body: JSON.stringify({
-      action: "simpanOpname",
-      kode_input: barcode.value,   // bisa kode item / barcode
-      nama: nama.innerText,
-      qty: qty.value,
-      petugas: petugas
-    })
-  })
-  .then(r => r.json())
-  .then(() => {
-    barcode.value = "";
-    qty.value = "";
-    nama.innerText = "";
-    qohEl.innerText = "";
-    status.innerText = "";
-    barcode.focus();
+    body: JSON.stringify(payload)
+  }).catch(() => {
+    console.error("Gagal simpan opname");
   });
 }
-
 
 /* ============================= */
 /* GANTI PETUGAS                 */
