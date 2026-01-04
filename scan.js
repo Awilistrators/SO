@@ -3,10 +3,6 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyBo6zgFV0ULvGk--Ornhf_
 let masterProduk = {};
 let masterReady = false; // ⬅️ TAMBAH
 let qrScanner = null;
-let kameraAktif = false;
-let lastScan = "";
-let lastScanTime = 0;
-
 
 const petugas = localStorage.getItem("petugas");
 const mode = localStorage.getItem("modeScan");
@@ -105,15 +101,7 @@ function cariProduk(){
   qohEl.innerText = "Stok sistem : " + produk.qoh;
   status.innerText = "✔ Produk ditemukan";
   bunyiBeep(); // 🔊 beep sukses
-
-  // ⬇️ TAMBAHKAN INI
-  qty.value = "";
-  setTimeout(() => {
-    qty.focus();
-  }, 100);
-
 } else {
-
     nama.innerText = "";
     qohEl.innerText = "";
     status.innerText = "⚠️ Produk tidak ditemukan";
@@ -153,9 +141,7 @@ function simpan(){
   nama.innerText = "";
   qohEl.innerText = "";
   status.innerText = "💾 Tersimpan";
-  resumeKamera();
-  scrollKeAtas();
-
+  barcode.focus();
 
   setTimeout(() => {
     status.innerText = "";
@@ -181,11 +167,11 @@ function ganti(){
 
 function bukaKamera(){
   const kameraDiv = document.getElementById("kamera");
+
   kameraDiv.style.display = "block";
 
   if(qrScanner) return;
 
-  kameraAktif = true;
   qrScanner = new Html5Qrcode("kamera");
 
   qrScanner.start(
@@ -201,71 +187,38 @@ function bukaKamera(){
       ]
     },
     (decodedText) => {
-      if(!kameraAktif) return;
-
-      const now = Date.now();
-if(decodedText === lastScan && now - lastScanTime < 1500) return;
-
-lastScan = decodedText;
-lastScanTime = now;
-
       barcode.value = decodedText;
-bunyiBeep();
-cariProduk();
-
-// ⬇️ PAUSE kamera setelah scan sukses
-pauseKamera();
-
-
-      // ❌ JANGAN stop kamera
+      bunyiBeep();
+      qrScanner.stop();
+      qrScanner = null;
+      kameraDiv.style.display = "none";
+      cariProduk();
     },
     () => {}
   );
 }
 
-function matikanKamera(){
-  const kameraDiv = document.getElementById("kamera");
-
-  kameraAktif = false;
-
-  if(qrScanner){
-    qrScanner.stop().then(() => {
-      qrScanner = null;
-      kameraDiv.style.display = "none";
-    });
-  }
-}
-
-
 
 function bunyiBeep(){
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
+    const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    osc1.type = "square";
-    osc2.type = "triangle";
+    osc.type = "sine";        // suara halus
+    osc.frequency.value = 880; // nada beep (Hz)
 
-    osc1.frequency.value = 600;
-    osc2.frequency.value = 1200;
-
-    osc1.connect(gain);
-    osc2.connect(gain);
+    osc.connect(gain);
     gain.connect(ctx.destination);
 
-    gain.gain.value = 0.18;
+    gain.gain.value = 0.15;   // volume (0.1–0.2 ideal)
 
-    osc1.start();
-    osc2.start();
-
-    osc1.stop(ctx.currentTime + 0.08);
-    osc2.stop(ctx.currentTime + 0.15);
-  } catch(e) {}
+    osc.start();
+    osc.stop(ctx.currentTime + 0.12); // durasi beep (detik)
+  } catch(e) {
+    console.log("Audio tidak diizinkan");
+  }
 }
-
 
 function tampilkanPopup(teks){
   const popup = document.getElementById("popup");
@@ -286,25 +239,3 @@ function tutupPopup(){
     popup.classList.add("hidden");
   }
 }
-
-function pauseKamera(){
-  kameraAktif = false;
-}
-
-function resumeKamera(){
-  kameraAktif = true;
-  lastScan = "";        // ⬅️ RESET BARCODE TERAKHIR
-  lastScanTime = 0;
-}
-
-function scrollKeAtas(){
-  setTimeout(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth"
-    });
-  }, 150);
-}
-
-
