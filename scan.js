@@ -53,15 +53,27 @@ function loadMasterProduk() {
 /* EVENT SCAN BARCODE            */
 /* ============================= */
 barcode.addEventListener("keydown", e => {
+
+  // ENTER (scanner mode enter)
   if (e.key === "Enter") {
     e.preventDefault();
     cariProduk();
+    return;
   }
 
+  // TAB (scanner mode tab)
   if (e.key === "Tab") {
-    setTimeout(cariProduk, 0);
+    // JANGAN preventDefault → biarkan scanner selesai
+    setTimeout(() => {
+      cariProduk();
+
+      // ⬇️ PAKSA BALIK KE QTY
+      qty.focus();
+      qty.select();
+    }, 0);
   }
 });
+
 
 barcode.addEventListener("input", () => {
   clearTimeout(scanTimer);
