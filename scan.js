@@ -7,6 +7,8 @@ let masterProduk = {};
 let masterReady = false;
 let qrScanner = null;
 let scanTimer = null;
+let lastScanCode = "";
+let scanLockTime = 0;
 
 const petugas = localStorage.getItem("petugas");
 if (!petugas) {
@@ -63,15 +65,12 @@ barcode.addEventListener("keydown", e => {
 
   // TAB (scanner mode tab)
   if (e.key === "Tab") {
-    // JANGAN preventDefault → biarkan scanner selesai
-    setTimeout(() => {
-      cariProduk();
-
-      // ⬇️ PAKSA BALIK KE QTY
-      qty.focus();
-      qty.select();
-    }, 0);
-  }
+  // biarkan blur / input yang memicu cariProduk
+  setTimeout(() => {
+    qty.focus();
+    qty.select();
+  }, 0);
+}
 });
 
 
@@ -91,6 +90,16 @@ function cariProduk() {
   const code = barcode.value.trim();
   if (!code) return;
 
+  const now = Date.now();
+
+  // ⛔ CEGAH PROSES DOBEL BARCODE YANG SAMA
+  if (code === lastScanCode && now - scanLockTime < 400) {
+    return;
+  }
+
+  lastScanCode = code;
+  scanLockTime = now;
+
   if (!masterReady) {
     status.innerText = "⏳ Data produk belum siap...";
     return;
@@ -99,21 +108,20 @@ function cariProduk() {
   const produk = masterProduk[code];
 
   if (produk) {
-  nama.innerText = produk.nama;
-  qohEl.innerText = "Stok sistem : " + produk.qoh;
-  status.innerText = "✔ Produk ditemukan";
-  bunyiBeep();
+    nama.innerText = produk.nama;
+    qohEl.innerText = "Stok sistem : " + produk.qoh;
+    status.innerText = "✔ Produk ditemukan";
 
-  // ⬇️ PINDAH CURSOR KE QTY
-  qty.focus();
-  qty.select(); // opsional: langsung blok isi lama
-}
- else {
+    bunyiBeep();   // 🔊 BEEP 1x SAJA (FINAL)
+    qty.focus();
+    qty.select();
+  } else {
     nama.innerText = "";
     qohEl.innerText = "";
     status.innerText = "⚠️ Produk tidak ditemukan";
   }
 }
+
 
 /* ============================= */
 /* SIMPAN OPNAME                 */
