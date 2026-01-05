@@ -184,14 +184,13 @@ function bukaKamera() {
         Html5QrcodeSupportedFormats.UPC_E
       ]
     },
-    decodedText => {
-      barcode.value = decodedText;
-      bunyiBeep();
-      qrScanner.stop();
-      qrScanner = null;
-      kameraDiv.style.display = "none";
-      cariProduk();
-    }
+  decodedText) => {
+  barcode.value = decodedText;
+  qrScanner.stop();
+  qrScanner = null;
+  kameraDiv.style.display = "none";
+  cariProduk(); // beep tetap jalan di sini
+}
   );
 }
 
