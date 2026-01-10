@@ -125,7 +125,7 @@ function cariProduk() {
     barcode.value = "";
     status.innerText = "";
     barcode.focus();
-  }, 2000);
+  }, 20000);
 }
 }
 
